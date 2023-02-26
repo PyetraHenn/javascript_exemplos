@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        div.container {
+            display: block;
+            width: 300px;
+            margin: 20px auto;
+            border: 1px solid;
+            padding: 15px;
+        }
+
+        input {
+            width: 100%;
+            margin: 0 0 10px 0;
+            font-size: 50px;
+            padding: 5px 15px;
+        }
+
+        button {
+            float: left;
+            width: 25%;
+            font-size: 50px;
+        }
+
+        div:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        #clear{
+            background-color: #ff5858;
+            color: white;
+            /* border: 0; */
+            width: 75%;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <input placeholder="0" id="tela" />
+        </div>
+        
+        <div>
+           
+            
+            <button id="n1">1</button>
+            <button id="n2">2</button>
+            <button id="n3">3</button>
+            <button id="somar">+</button>
+            <br>
+            <button id="n4">4</button>
+            <button id="n5">5</button>
+            <button id="n6">6</button>
+            <button id="subtrair">&minus;</button>
+            <br>
+            <button id="n7">7</button>
+            <button id="n8">8</button>
+            <button id="n9">9</button>
+            <button id="multiplicar">&times;</button>
+            
+            <br>
+            <button id="ponto">.</button>
+            <button id="n0">0</button>
+            <button id="igual">=</button>
+            <button id="dividir">&divide;</button>
+            <div>
+            
+                <button id="clear">C</button>
+            </div>
+        </div>
+    
+    </div>
+    
+    <script>
+        var $ = document.querySelector.bind(document);
+
+        var tela = $('#tela');
+        var btn1 = $("#one");
+
+        function escrevernatela(param) {
+            if (hasNumberBefore()) {
+                tela.value += param;
+            } else {
+                if (param == '-' || param == "+" || param == "*" || param == "/") {
+                    var v = tela.value + param;
+                    tela.value = v.substr(0, tela.value.length - 1) + param;
+                } else { tela.value += param; }
+            }
+        }
+
+        function resultado() {
+            tela.value = eval(tela.value.toString());
+        }
+
+        function clear() {
+            tela.value = '';
+        }
+        function hasNumberBefore() {
+            var v = tela.value;
+            var lastC = v.substr((v.length - 1), v.lenght);
+            if (lastC == '+' || lastC == '-' || lastC == '*' || lastC == '/') {
+                return false;
+            }
+            return true;
+        }
+
+        $('#n1').onclick = () => escrevernatela('1');
+        $('#n2').onclick = () => escrevernatela('2');
+        $('#n3').onclick = () => escrevernatela('3');
+        $('#n4').onclick = () => escrevernatela('4');
+        $('#n5').onclick = () => escrevernatela('5');
+        $('#n6').onclick = () => escrevernatela('6');
+        $('#n7').onclick = () => escrevernatela('7');
+        $('#n8').onclick = () => escrevernatela('8');
+        $('#n9').onclick = () => escrevernatela('9');
+        $('#n0').onclick = () => escrevernatela('0');
+        $('#somar').onclick = () => escrevernatela('+');
+        $('#subtrair').onclick = () => escrevernatela('-');
+        $('#multiplicar').onclick = () => escrevernatela('*');
+        $('#dividir').onclick = () => escrevernatela('/');
+        $('#ponto').onclick = () => escrevernatela('.');
+        $('#igual').onclick = () => resultado();
+        $('#clear').onclick = () => clear();
+
+
+
+    </script>
+
+</body>
+
+</html>

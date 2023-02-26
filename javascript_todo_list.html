@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        .btn_remove {
+            background-color: red;
+        }
+
+        #task-clean-text{
+            display: none;
+        }
+        #taskinput {
+            margin-bottom: 55px;
+            margin-top: 15px;
+        }
+
+        #tasklist {
+            display: table;
+            padding: 0;
+            width: 100%;
+        }
+
+        #tasklist li {
+            display: flex;
+            align-items: baseline;
+            border-bottom: 1px solid #ccc;
+            padding-top: 15px;
+        }
+
+        #tasklist li input {
+            padding-right: 10px;
+            margin-right: 10px;
+
+        }
+
+        #tasklist li {
+            display: flex;
+            align-items: baseline;
+        }
+        h1{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <br />
+            <br />
+            <h1>TASK LIST</h1>
+            <p>Organize suas tarefas</h3>
+        </div>
+        <hr />
+        <br />
+        <br />
+        <div class="row">
+            <form class="col-md-4" onsubmit="TASK.add(event)">
+                <input placeholder="NOVA TAREFA" id="taskinput" type="text">
+                <button type='button' onclick="TASK.add()" class="btn_addNew">
+                    ADD
+                </button>
+                <button type='button' onclick="TASK.delete()" class="btn_remove">
+                    remove
+                </button>
+            </form>
+            <div class="col-md-8">
+                <h3>LISTA DE TAREFAS</h3>
+                <ul id="tasklist">
+                    <li>
+                        <input type="checkbox">
+                        <p>Task</p>
+                    </li>
+                    
+                </ul>
+                <p id="task-clean-text">PARABÉNS VOCÊ CONCLUIU TODAS AS SUAS TAREFAS!</p>
+            </div>
+        </div>
+    </div>
+
+    <p id="demo"></p>
+    <script>
+        const TASK = (
+            function () {
+                const taskWork = {};
+                const $ = document.querySelector.bind(document);
+                const $$ = document.querySelectorAll.bind(document);
+
+                // variaveis
+                const inputTask = $('#taskinput');
+                const tasklist = $('#tasklist');
+                const taskcleantext = $('#task-clean-text');
+                let newList = [];
+                // Metodos
+
+                function confirmDelete(onConfirm, onCancel) {
+                    var x;
+                    var r = confirm(`Tem certeza que deseja excluir essa${newList.length > 1?'s':''} tarefa${newList.length > 1?'s':''}?`);
+                    if (r == true) {
+                        onConfirm();
+                    }
+                    else {
+                        onCancel();
+                    }
+                }
+
+                function _inputEnd() {
+                    inputTask.value = '';
+                    inputTask.focus();
+                }
+                function _showCleanText(value){
+                    if(value){
+                        taskcleantext.style.display = 'block'
+                    } else {
+                        taskcleantext.style.display = 'none'
+                    }
+                }
+                function _validateDelete() {
+                    for (li of tasklist.children) {
+                        if (li.children[0].checked) {
+                            newList.push(li);
+                        }
+                    }
+                    console.log(newList);
+
+                    if (!tasklist.children.length) {
+                        alert("Você concluiu todas as suas tarefas!");
+                        _showCleanText(true);
+                        return false;
+                    }
+                    if (!newList.length) {
+                        alert("Nenhuma tarefa selecionada!");
+                        return false;
+                    }
+
+                    return true;
+
+
+                }
+
+
+                taskWork.delete = async function () {
+                    const isValid = _validateDelete();
+                    function _confirm(){
+                        if(newList.length == tasklist.children.length){
+                            _showCleanText(true);
+                            _inputEnd();
+                        }
+                        newList.map((item) => tasklist.removeChild(item));
+                        newList = [];
+                    }
+                    function _cancel(){
+                        alert('Ação cancelada!');
+                        _inputEnd();
+                    }
+                    if (isValid) {
+                        confirmDelete(_confirm, _cancel);
+                        _inputEnd();
+                    }
+                };
+                taskWork.adiconar = function (event) {
+
+                    if (event) {
+                        event.preventDefault();
+                    }
+                    if (inputTask.value) {
+                        _showCleanText(false);
+                        let li = document.createElement('li');
+                        li.setAttribute('class', 'item')
+                        let inputRadio = document.createElement('input');
+                        inputRadio.setAttribute('type', 'checkbox');
+
+                        let p = document.createElement('p');
+                        p.innerHTML = inputTask.value;
+
+                        li.appendChild(inputRadio);
+                        li.appendChild(p);
+
+                        tasklist.appendChild(li);
+                        _inputEnd();
+                    } else {
+                        alert('Informe um valor');
+                        _inputEnd();
+                    }
+
+
+                }
+
+                // Retorno
+                return {
+                    delete: taskWork.delete,
+                    add: taskWork.adiconar
+                }
+            })();
+    </script>
+</body>
+
+</html>
